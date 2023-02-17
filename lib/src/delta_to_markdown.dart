@@ -7,7 +7,6 @@ import 'package:collection/collection.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill/src/models/documents/nodes/block.dart';
 import 'package:flutter_quill/src/models/documents/nodes/line.dart';
-import 'package:flutter_quill/src/models/documents/nodes/node.dart';
 import 'package:markdown_quill/src/custom_quill_attributes.dart';
 import 'package:markdown_quill/src/utils.dart';
 
@@ -345,7 +344,7 @@ extension _NodeX on Node {
   }
 
   List<Attribute<Object?>> attrsSortedByLongestSpan() {
-    final attrCount = <Attribute, int>{};
+    final attrCount = <Attribute<dynamic>, int>{};
     Node? node = this;
     // get the first node
     while (node?.previous != null) {

@@ -28,7 +28,7 @@ List<Operation> fromOps(List<Operation> ops) {
   return delta.toList();
 }
 
-Map<String, dynamic> attrsToJson(List<Attribute> attrs) {
+Map<String, dynamic> attrsToJson(List<Attribute<dynamic>> attrs) {
   return <String, dynamic>{
     for (final attr in attrs) ...attr.toJson(),
   };
@@ -116,7 +116,7 @@ Goodbye
 *   [Going forward, the \`--dev\` flag passed into Substrate nodes will imply \`--tmp\` if a \`--base-path\` is not explicitly provided](https://github.com/paritytech/substrate/pull/9938), meaning all dev chains are now temporary chains by default. To persist a dev chain’s database, pass in the base-path parameter.
 ''';
 
-    final link =
+    const link =
         LinkAttribute('https://github.com/paritytech/substrate/pull/9938');
 
     mdToDeltaCheck(
@@ -165,7 +165,7 @@ Goodbye
   });
 
   test('code block with language', () {
-    final styles = <Attribute>[
+    final styles = <Attribute<dynamic>>[
       Attribute.codeBlock,
       CodeBlockLanguageAttribute('java'),
     ];
@@ -1444,11 +1444,11 @@ The number of windows in my house is
             Operation.insert('foo'),
             Operation.insert('\n', Attribute.ul.toJson()),
             Operation.insert('bar'),
-            Operation.insert(
-                '\n', attrsToJson([Attribute.ul, IndentAttribute(level: 1)])),
+            Operation.insert('\n',
+                attrsToJson([Attribute.ul, const IndentAttribute(level: 1)])),
             Operation.insert('baz'),
-            Operation.insert(
-                '\n', attrsToJson([Attribute.ul, IndentAttribute(level: 2)])),
+            Operation.insert('\n',
+                attrsToJson([Attribute.ul, const IndentAttribute(level: 2)])),
           ],
         );
       });
@@ -1468,21 +1468,21 @@ The number of windows in my house is
             Operation.insert('b'),
             Operation.insert(
               '\n',
-              attrsToJson([Attribute.ul, IndentAttribute(level: 1)]),
+              attrsToJson([Attribute.ul, const IndentAttribute(level: 1)]),
             ),
             Operation.insert('c'),
             Operation.insert(
               '\n',
-              attrsToJson([Attribute.ul, IndentAttribute(level: 1)]),
+              attrsToJson([Attribute.ul, const IndentAttribute(level: 1)]),
             ),
             Operation.insert('d'),
             Operation.insert('\n', Attribute.ul.toJson()),
             Operation.insert('e'),
-            Operation.insert(
-                '\n', attrsToJson([Attribute.ul, IndentAttribute(level: 1)])),
+            Operation.insert('\n',
+                attrsToJson([Attribute.ul, const IndentAttribute(level: 1)])),
             Operation.insert('f'),
-            Operation.insert(
-                '\n', attrsToJson([Attribute.ul, IndentAttribute(level: 1)])),
+            Operation.insert('\n',
+                attrsToJson([Attribute.ul, const IndentAttribute(level: 1)])),
           ],
         );
       });
