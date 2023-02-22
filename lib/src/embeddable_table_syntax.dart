@@ -1,13 +1,13 @@
 import 'package:charcode/charcode.dart';
 import 'package:flutter_quill/flutter_quill.dart' hide Node;
-import 'package:markdown/markdown.dart';
+import 'package:markdown/markdown.dart' as md;
 
 /// Parses markdown table and saves the table markdown content into the element attributes.
-class EmbeddableTableSyntax extends BlockSyntax {
-  static const _base = TableSyntax();
+class EmbeddableTableSyntax extends md.BlockSyntax {
+  static const _base = md.TableSyntax();
 
   @override
-  bool canEndBlock(BlockParser parser) => false;
+  bool canEndBlock(md.BlockParser parser) => false;
 
   @override
   RegExp get pattern => _base.pattern;
@@ -16,7 +16,7 @@ class EmbeddableTableSyntax extends BlockSyntax {
   const EmbeddableTableSyntax();
 
   @override
-  bool canParse(BlockParser parser) => _base.canParse(parser);
+  bool canParse(md.BlockParser parser) => _base.canParse(parser);
 
   /// Parses a table into its three parts:
   ///
@@ -24,7 +24,7 @@ class EmbeddableTableSyntax extends BlockSyntax {
   /// * a divider of hyphens and pipes (not rendered)
   /// * many body rows of body cells (`<td>` cells)
   @override
-  Node? parse(BlockParser parser) {
+  md.Node? parse(md.BlockParser parser) {
     final columnCount = _columnCount(parser.next!);
     final headCells = _columnCount(parser.current);
     final valBuf = StringBuffer('${parser.current}\n${parser.next!}');
@@ -36,21 +36,21 @@ class EmbeddableTableSyntax extends BlockSyntax {
     // advance header and divider of hyphens.
     parser.advance();
 
-    while (!parser.isDone && !BlockSyntax.isAtBlockEnd(parser)) {
+    while (!parser.isDone && !md.BlockSyntax.isAtBlockEnd(parser)) {
       valBuf.write('\n${parser.current}');
       parser.advance();
     }
 
-    return Element.empty(EmbeddableTable.tableType)
+    return md.Element.empty(EmbeddableTable.tableType)
       ..attributes['data'] = valBuf.toString();
   }
 
-  int _columnCount(String line) {
-    final startIndex = _walkPastOpeningPipe(line);
+  int _columnCount(md.Line line) {
+    final startIndex = _walkPastOpeningPipe(line.content);
 
-    var endIndex = line.length - 1;
+    var endIndex = line.content.length - 1;
     while (endIndex > 0) {
-      final ch = line.codeUnitAt(endIndex);
+      final ch = line.content.codeUnitAt(endIndex);
       if (ch == $pipe) {
         endIndex--;
         break;
@@ -61,7 +61,7 @@ class EmbeddableTableSyntax extends BlockSyntax {
       endIndex--;
     }
 
-    return line.substring(startIndex, endIndex + 1).split('|').length;
+    return line.content.substring(startIndex, endIndex + 1).split('|').length;
   }
 
   int _walkPastWhitespace(String line, int index) {
